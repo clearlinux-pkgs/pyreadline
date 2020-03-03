@@ -4,25 +4,25 @@
 #
 Name     : pyreadline
 Version  : 2.1
-Release  : 6
+Release  : 7
 URL      : https://files.pythonhosted.org/packages/bc/7c/d724ef1ec3ab2125f38a1d53285745445ec4a8f19b9bb0761b4064316679/pyreadline-2.1.zip
 Source0  : https://files.pythonhosted.org/packages/bc/7c/d724ef1ec3ab2125f38a1d53285745445ec4a8f19b9bb0761b4064316679/pyreadline-2.1.zip
 Summary  : A python implmementation of GNU readline.
 Group    : Development/Tools
 License  : BSD-3-Clause
-Requires: pyreadline-python3
-Requires: pyreadline-license
-Requires: pyreadline-python
+Requires: pyreadline-license = %{version}-%{release}
+Requires: pyreadline-python = %{version}-%{release}
+Requires: pyreadline-python3 = %{version}-%{release}
 BuildRequires : buildreq-distutils3
 
 %description
-The pyreadline package is a python implementation of GNU readline functionality
-        it is based on the ctypes based UNC readline package by Gary Bishop.
-        It is not complete. It has been tested for use with windows 2000 and windows xp.
-        
-        * pyreadline 2.1 <2015-09-16>
-        
-          This is a bugfix release to make pyreadline work with python 3.5.
+Install instructions for pyreadline
+===================================
+The pyreadline package is based on the readline package by Gary Bishop. It is
+not a complete replacement for GNU readline. The pyreadline package is
+currently only for the win32 platform. The pyreadline package tries to improve
+the integration with the win32 platform by including such things as copy
+paste.
 
 %package license
 Summary: license components for the pyreadline package.
@@ -35,7 +35,7 @@ license components for the pyreadline package.
 %package python
 Summary: python components for the pyreadline package.
 Group: Default
-Requires: pyreadline-python3
+Requires: pyreadline-python3 = %{version}-%{release}
 
 %description python
 python components for the pyreadline package.
@@ -45,6 +45,7 @@ python components for the pyreadline package.
 Summary: python3 components for the pyreadline package.
 Group: Default
 Requires: python3-core
+Provides: pypi(pyreadline)
 
 %description python3
 python3 components for the pyreadline package.
@@ -52,20 +53,29 @@ python3 components for the pyreadline package.
 
 %prep
 %setup -q -n pyreadline-2.1
+cd %{_builddir}/pyreadline-2.1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1534861223
-python3 setup.py build -b py3
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1583208937
+# -Werror is for werrorists
+export GCC_IGNORE_WERROR=1
+export CFLAGS="$CFLAGS -fno-lto "
+export FCFLAGS="$CFLAGS -fno-lto "
+export FFLAGS="$CFLAGS -fno-lto "
+export CXXFLAGS="$CXXFLAGS -fno-lto "
+export MAKEFLAGS=%{?_smp_mflags}
+python3 setup.py build
 
 %install
+export MAKEFLAGS=%{?_smp_mflags}
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/doc/pyreadline
-cp doc/COPYING %{buildroot}/usr/share/doc/pyreadline/doc_COPYING
-python3 -tt setup.py build -b py3 install --root=%{buildroot}
+mkdir -p %{buildroot}/usr/share/package-licenses/pyreadline
+cp %{_builddir}/pyreadline-2.1/doc/COPYING %{buildroot}/usr/share/package-licenses/pyreadline/73bbd67c3b98ceffb9c7d040331bd631b0f6a3e4
+python3 -tt setup.py build  install --root=%{buildroot}
 echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
 echo ----[ mark ]----
@@ -74,8 +84,8 @@ echo ----[ mark ]----
 %defattr(-,root,root,-)
 
 %files license
-%defattr(-,root,root,-)
-/usr/share/doc/pyreadline/doc_COPYING
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/pyreadline/73bbd67c3b98ceffb9c7d040331bd631b0f6a3e4
 
 %files python
 %defattr(-,root,root,-)
