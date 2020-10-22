@@ -4,7 +4,7 @@
 #
 Name     : pyreadline
 Version  : 2.1
-Release  : 9
+Release  : 10
 URL      : https://files.pythonhosted.org/packages/bc/7c/d724ef1ec3ab2125f38a1d53285745445ec4a8f19b9bb0761b4064316679/pyreadline-2.1.zip
 Source0  : https://files.pythonhosted.org/packages/bc/7c/d724ef1ec3ab2125f38a1d53285745445ec4a8f19b9bb0761b4064316679/pyreadline-2.1.zip
 Summary  : A python implmementation of GNU readline.
@@ -16,13 +16,13 @@ Requires: pyreadline-python3 = %{version}-%{release}
 BuildRequires : buildreq-distutils3
 
 %description
-Install instructions for pyreadline
-===================================
-The pyreadline package is based on the readline package by Gary Bishop. It is
-not a complete replacement for GNU readline. The pyreadline package is
-currently only for the win32 platform. The pyreadline package tries to improve
-the integration with the win32 platform by including such things as copy
-paste.
+The pyreadline package is a python implementation of GNU readline functionality
+        it is based on the ctypes based UNC readline package by Gary Bishop.
+        It is not complete. It has been tested for use with windows 2000 and windows xp.
+        
+        * pyreadline 2.1 <2015-09-16>
+        
+          This is a bugfix release to make pyreadline work with python 3.5.
 
 %package license
 Summary: license components for the pyreadline package.
@@ -60,12 +60,11 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1583208937
-# -Werror is for werrorists
+export SOURCE_DATE_EPOCH=1603401367
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
-export FCFLAGS="$CFLAGS -fno-lto "
-export FFLAGS="$CFLAGS -fno-lto "
+export FCFLAGS="$FFLAGS -fno-lto "
+export FFLAGS="$FFLAGS -fno-lto "
 export CXXFLAGS="$CXXFLAGS -fno-lto "
 export MAKEFLAGS=%{?_smp_mflags}
 python3 setup.py build
